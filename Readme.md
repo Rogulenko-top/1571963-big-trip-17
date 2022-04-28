@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Антон Рогуленко](https://up.htmlacademy.ru/ecmascript/17/user/1571963).
-* Наставник: Дмитрий Железцов.
+* Наставник: [Дмитрий Железцов](https://up.htmlacademy.ru/profession/fullstack/2/ecmascript/17/user/983299).
 
 ---
 
