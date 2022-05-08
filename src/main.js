@@ -16,7 +16,7 @@ const destinationModel = new DestinationModel();
 const headPresenter = new HeadPresenter(tripMainElement, tripFiltersElement);
 const bodyPresenter = new BodyPresenter(tripEventsElement, pointModel, destinationModel);
 
-headPresenter.init(tripMainElement, tripFiltersElement);
-bodyPresenter.init(tripEventsElement, pointModel, destinationModel);
+headPresenter.init();
+bodyPresenter.init();
 
 
