@@ -17,10 +17,14 @@ export default class BodyPresenter {
   #boardDestination = [];
   #boardPoint = [];
 
-  init = (bodyContainer, pointModel, destinationModel) => {
+  constructor(bodyContainer, pointModel, destinationModel){
     this.#bodyContainer = bodyContainer;
     this.#pointModel = pointModel;
     this.#destinationModel = destinationModel;
+
+  }
+
+  init = () => {
     this.#boardDestination = this.#destinationModel.destinations;
     this.#boardPoint = this.#pointModel.points;
 

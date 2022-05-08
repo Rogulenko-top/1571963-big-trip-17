@@ -11,7 +11,8 @@ const tripEventsElement = document.querySelector('.trip-events');
 const pointModel = new PointModel();
 const destinationModel = new DestinationModel();
 const headPresenter = new HeadPresenter();
-const bodyPresenter = new BodyPresenter();
+
+const bodyPresenter = new BodyPresenter(tripEventsElement, pointModel, destinationModel);
 
 headPresenter.init(tripMainElement, tripFiltersElement);
 bodyPresenter.init(tripEventsElement, pointModel, destinationModel);
