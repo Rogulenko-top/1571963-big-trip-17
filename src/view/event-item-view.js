@@ -65,23 +65,26 @@ const createEventItemTemplate = (boardPoint) => {
 };
 
 export default class EventItemView {
+  #boardPoint = null;
+  #element = null;
+
   constructor(boardPoint){
-    this.boardPoint = boardPoint;
+    this.#boardPoint = boardPoint;
   }
 
-  getTemplate() {
-    return createEventItemTemplate (this.boardPoint);
+  get template() {
+    return createEventItemTemplate (this.#boardPoint);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

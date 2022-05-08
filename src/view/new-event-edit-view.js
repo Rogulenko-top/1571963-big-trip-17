@@ -492,24 +492,28 @@ const createNewEventEditTemplate = (boardPoint, boardDestination) => {
 };
 
 export default class NewEventEditView {
+  #boardPoint = null;
+  #boardDestination = null;
+  #element = null;
+
   constructor(boardPoint, boardDestination){
-    this.boardPoint = boardPoint;
-    this.boardDestination = boardDestination;
+    this.#boardPoint = boardPoint;
+    this.#boardDestination = boardDestination;
   }
 
-  getTemplate() {
-    return createNewEventEditTemplate(this.boardPoint, this.boardDestination);
+  get template() {
+    return createNewEventEditTemplate(this.#boardPoint, this.#boardDestination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
