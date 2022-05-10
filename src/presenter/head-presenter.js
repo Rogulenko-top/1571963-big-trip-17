@@ -1,7 +1,7 @@
 import TripInfoView from '../view/trip-info-view';
 import TripFiltersView from '../view/trip-filters-view.js';
 
-import {RenderPosition,render} from '../render.js';
+import { render,RenderPosition } from '../framework/render';
 
 export default class HeadPresenter {
   #tripInfoView = new TripInfoView();

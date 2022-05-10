@@ -4,7 +4,7 @@ import EventItemView from '../view/event-item-view.js';
 import NewEventFormView from '../view/new-event-form-view.js';
 import TripListEmptyView from '../view/trip-list-empty-view.js';
 
-import {render} from '../render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class BodyPresenter {
   #eventListView = new EventListView();
@@ -35,37 +35,37 @@ export default class BodyPresenter {
     const FormViewComponent = new NewEventFormView(point, descritpion);
     const ItemViewComponent = new EventItemView(point, descritpion);
 
-    const addFormToPoint = () => {
-      ItemViewComponent.element.append(FormViewComponent.element);
+    const replacePointToForm = () => {
+      replace(ItemViewComponent, FormViewComponent);
     };
 
-    const removeFormToPoint = () => {
-      FormViewComponent.element.remove(ItemViewComponent.element);
+    const replaceFormToPoint = () => {
+      replace(FormViewComponent, ItemViewComponent);
     };
 
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        removeFormToPoint();
+        replacePointToForm();
         document.removeEventListener('keydown', onEscKeyDown);
       }
     };
 
-    ItemViewComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      addFormToPoint();
+    ItemViewComponent.setClickHandler(() => {
+      replaceFormToPoint();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    FormViewComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      removeFormToPoint();
+    FormViewComponent.setFormSubmitHandler(() => {
+      replacePointToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    FormViewComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      removeFormToPoint();
+    FormViewComponent.setClickHandler (() => {
+      replacePointToForm();
       document.removeEventListener('keydown', onEscKeyDown);
     });
+
     render(ItemViewComponent, this.#eventListView.element);
   };
 

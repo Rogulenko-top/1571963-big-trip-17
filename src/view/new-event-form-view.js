@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getTitle } from '../utils.js';
 
 const getOffers = (trip) => {
@@ -143,12 +143,12 @@ const createNewEventFormTemplate = (boardPoint, boardDestination) => {
   );
 };
 
-export default class NewEventFormView {
+export default class NewEventFormView extends AbstractView {
   #boardPoint = null;
   #boardDestination = null;
-  #element = null;
 
   constructor(boardPoint, boardDestination){
+    super();
     this.#boardPoint = boardPoint;
     this.#boardDestination = boardDestination;
   }
@@ -157,15 +157,30 @@ export default class NewEventFormView {
     return createNewEventFormTemplate(this.#boardPoint, this.#boardDestination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    // 1. Поэтому колбэк мы запишем во внутреннее свойство
+    this._callback.click = callback;
+    // 2. В addEventListener передадим абстрактный обработчик
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    // 3. А внутри абстрактного обработчика вызовем колбэк
+    this._callback.click();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setFormSubmitHandler = (callback) => {
+    // 1. Поэтому колбэк мы запишем во внутреннее свойство
+    this._callback.formSubmit  = callback;
+    // 2. В addEventListener передадим абстрактный обработчик
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    // 3. А внутри абстрактного обработчика вызовем колбэк
+    this._callback.click();
+  };
+
 }
