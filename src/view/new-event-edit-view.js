@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getTitle } from '../utils.js';
 
 const getOffers = (trip) => {
@@ -491,12 +491,12 @@ const createNewEventEditTemplate = (boardPoint, boardDestination) => {
   );
 };
 
-export default class NewEventEditView {
+export default class NewEventEditView extends AbstractView {
   #boardPoint = null;
   #boardDestination = null;
-  #element = null;
 
   constructor(boardPoint, boardDestination){
+    super();
     this.#boardPoint = boardPoint;
     this.#boardDestination = boardDestination;
   }
@@ -505,15 +505,4 @@ export default class NewEventEditView {
     return createNewEventEditTemplate(this.#boardPoint, this.#boardDestination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }

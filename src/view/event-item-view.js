@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getDurationDates } from '../utils.js';
 import { getTitle } from '../utils.js';
 
@@ -64,11 +64,11 @@ const createEventItemTemplate = (boardPoint) => {
   );
 };
 
-export default class EventItemView {
+export default class EventItemView extends AbstractView {
   #boardPoint = null;
-  #element = null;
 
   constructor(boardPoint){
+    super();
     this.#boardPoint = boardPoint;
   }
 
@@ -76,15 +76,15 @@ export default class EventItemView {
     return createEventItemTemplate (this.#boardPoint);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    // 3. А внутри абстрактного обработчика вызовем колбэк
+    this._callback.click();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
 }
