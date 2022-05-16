@@ -4,8 +4,8 @@ import TripFiltersView from '../view/trip-filters-view.js';
 import { render,RenderPosition } from '../framework/render';
 
 export default class HeadPresenter {
-  #tripInfoView = new TripInfoView();
-  #tripFiltersView = new TripFiltersView();
+  #tripInfoView = null;
+  #tripFiltersView = null;
 
   #headContainer = null;
   #filterContainer = null;
@@ -15,16 +15,19 @@ export default class HeadPresenter {
     this.#filterContainer = filterContainer;
   }
 
+  init = () => {
+    this.#tripInfoView = new TripInfoView();
+    this.#tripFiltersView = new TripFiltersView();
+
+    this.#renderInfoView();
+    this.#renderFiltersView();
+  };
+
   #renderInfoView = () =>{
     render(this.#tripInfoView, this.#headContainer, RenderPosition.AFTERBEGIN);
   };
 
   #renderFiltersView = () =>{
     render(this.#tripFiltersView, this.#filterContainer);
-  };
-
-  init = () => {
-    this.#renderInfoView();
-    this.#renderFiltersView();
   };
 }

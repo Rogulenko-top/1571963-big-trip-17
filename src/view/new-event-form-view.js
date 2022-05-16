@@ -17,7 +17,7 @@ const getOffers = (trip) => {
   return offersTemplate;
 };
 
-const createNewEventFormTemplate = (boardPoint, boardDestination) => {
+const createNewEventFormTemplate = (boardPoint) => {
   const {basePrice,
     dateFrom,
     dateTo,
@@ -26,7 +26,6 @@ const createNewEventFormTemplate = (boardPoint, boardDestination) => {
     type
   } = boardPoint;
 
-  const {description} = boardDestination;
   return(
     `<li class="trip-events__item">
      <form class="event event--edit" action="#" method="post">
@@ -94,7 +93,7 @@ const createNewEventFormTemplate = (boardPoint, boardDestination) => {
            <label class="event__label  event__type-output" for="event-destination-1">
              ${type} ${getTitle(boardPoint)} 
            </label>
-           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
+           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
            <datalist id="destination-list-1">
              <option value="Amsterdam"></option>
              <option value="Geneva"></option>
@@ -135,7 +134,7 @@ const createNewEventFormTemplate = (boardPoint, boardDestination) => {
 
          <section class="event__section  event__section--destination">
            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-           <p class="event__destination-description">${description}</p>
+           <p class="event__destination-description">${destination.description}</p>
          </section>
        </section>
      </form>
@@ -147,14 +146,13 @@ export default class NewEventFormView extends AbstractView {
   #boardPoint = null;
   #boardDestination = null;
 
-  constructor(boardPoint, boardDestination){
+  constructor(boardPoint){
     super();
     this.#boardPoint = boardPoint;
-    this.#boardDestination = boardDestination;
   }
 
   get template() {
-    return createNewEventFormTemplate(this.#boardPoint, this.#boardDestination);
+    return createNewEventFormTemplate(this.#boardPoint);
   }
 
   setClickHandler = (callback) => {
