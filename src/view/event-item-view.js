@@ -31,7 +31,7 @@ const createEventItemTemplate = (boardPoint) => {
          <div class="event__type">
            <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
          </div>
-         <h4 class="event__title">${type} ${getTitle(boardPoint)} ${destination}</h4>
+         <h4 class="event__title">${type} ${getTitle(boardPoint)} ${destination.name}</h4>
          <div class="event__schedule">
            <p class="event__time">
              <time class="event__start-time" datetime="${dateFrom.format()}">${dateFrom.format('HH:mm')}</time>
@@ -85,6 +85,16 @@ export default class EventItemView extends AbstractView {
     evt.preventDefault();
     // 3. А внутри абстрактного обработчика вызовем колбэк
     this._callback.click();
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   };
 
 }
