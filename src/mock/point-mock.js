@@ -1,6 +1,6 @@
 import {createTypes} from './offer-mock.js';
 import {createDestinations} from './destination-mock.js';
-import {getRandomInteger, getRandomArrayElement} from '../utils.js';
+import {getRandomInteger, getRandomArrayElement} from '../utils/point.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import minMax from 'dayjs/plugin/minMax.js';

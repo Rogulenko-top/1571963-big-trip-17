@@ -1,5 +1,6 @@
 import TripInfoView from '../view/trip-info-view';
 import TripFiltersView from '../view/trip-filters-view.js';
+import { generateFilter } from '../mock/filter-mock.js';
 
 import { render,RenderPosition } from '../framework/render';
 
@@ -10,14 +11,17 @@ export default class HeadPresenter {
   #headContainer = null;
   #filterContainer = null;
 
-  constructor(headContainer, filterContainer){
+  #pointData = null;
+
+  constructor(headContainer, filterContainer,pointData){
     this.#headContainer = headContainer;
     this.#filterContainer = filterContainer;
+    this.#pointData = pointData;
   }
 
   init = () => {
     this.#tripInfoView = new TripInfoView();
-    this.#tripFiltersView = new TripFiltersView();
+    this.#tripFiltersView = new TripFiltersView(generateFilter(this.#pointData));
 
     this.#renderInfoView();
     this.#renderFiltersView();

@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomMultipleArrayElement} from '../utils.js';
+import {getRandomInteger, getRandomMultipleArrayElement} from '../utils/point.js';
 
 const CITIES_LIBRARY = ['Tokyo','Wellington', 'Canberra', 'Toronto', 'Oslo'];
 

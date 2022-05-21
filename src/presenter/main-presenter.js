@@ -6,7 +6,7 @@ import HeadPresenter from './head-presenter.js';
 import { SORT_TYPE } from '../const.js';
 
 import { render } from '../framework/render.js';
-import { updateItem, sortPointByPrice, sortByTime } from '../utils.js';
+import { updateItem, sortPointByPrice, sortByTime } from '../utils/point.js';
 
 export default class MainPresenter {
 
@@ -49,7 +49,7 @@ export default class MainPresenter {
   };
 
   #renderHeadPresenter = () => {
-    this.#headPresenter = new HeadPresenter(this.#tripMainDOM, this.#tripFiltersDOM);
+    this.#headPresenter = new HeadPresenter(this.#tripMainDOM, this.#tripFiltersDOM, this.#pointData.points);
     this.#headPresenter.init();
   };
 
