@@ -103,9 +103,9 @@ const sortByTime = (pointA, pointB) => {
   return compareTime(timeA, timeB);
 };
 
-// const isPointPast = (date) => dayjs().isAfter(date, 'day');
-// const isPointFuture = (date) => dayjs().isBefore(date, 'day');
-// const isPointCurrent = (date) => dayjs().isSame(date, 'day');
+const isPointPast = (date) => dayjs().isAfter(date, 'day');
+const isPointFuture = (date) => dayjs().isBefore(date, 'day');
+const isPointCurrent = (date) => dayjs().isSame(date, 'day');
 
 
-export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, getTitle, updateItem, sortPointByPrice, sortByTime };
+export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, getTitle, updateItem, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent };

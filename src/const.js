@@ -10,4 +10,10 @@ const SORT_TYPE = {
   TIME: 'TIME',
 };
 
-export { MODE, SORT_TYPE };
+const FILTER_TYPE = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
+export { MODE, SORT_TYPE, FILTER_TYPE };

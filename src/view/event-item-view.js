@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getDurationDates } from '../utils.js';
-import { getTitle } from '../utils.js';
+import { getDurationDates } from '../utils/point.js';
+import { getTitle } from '../utils/point.js';
 
 const getOffers = (trip) => {
   let offersTemplate = '';
