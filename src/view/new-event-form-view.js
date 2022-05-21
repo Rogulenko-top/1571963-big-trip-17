@@ -17,14 +17,11 @@ const getOffers = (trip) => {
   return offersTemplate;
 };
 
-const createNewEventFormTemplate = (boardPoint) => {
-  const {basePrice,
-    dateFrom,
-    dateTo,
-    destination,
-    offers,
-    type
-  } = boardPoint;
+const createNewEventFormTemplate = (pointData, destinationData) => {
+
+  const { basePrice, dateFrom, dateTo, destination, offers, type } = pointData;
+
+  const { description } = destinationData;
 
   return(
     `<li class="trip-events__item">
@@ -91,9 +88,9 @@ const createNewEventFormTemplate = (boardPoint) => {
 
          <div class="event__field-group  event__field-group--destination">
            <label class="event__label  event__type-output" for="event-destination-1">
-             ${type} ${getTitle(boardPoint)} 
+             ${type} ${getTitle(pointData)} 
            </label>
-           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
+           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
            <datalist id="destination-list-1">
              <option value="Amsterdam"></option>
              <option value="Geneva"></option>
@@ -134,7 +131,7 @@ const createNewEventFormTemplate = (boardPoint) => {
 
          <section class="event__section  event__section--destination">
            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-           <p class="event__destination-description">${destination.description}</p>
+           <p class="event__destination-description">${description}</p>
          </section>
        </section>
      </form>
@@ -143,16 +140,17 @@ const createNewEventFormTemplate = (boardPoint) => {
 };
 
 export default class NewEventFormView extends AbstractView {
-  #boardPoint = null;
-  #boardDestination = null;
+  #point = null;
+  #destination = null;
 
-  constructor(boardPoint){
+  constructor(point, destination){
     super();
-    this.#boardPoint = boardPoint;
+    this.#point = point;
+    this.#destination = destination;
   }
 
   get template() {
-    return createNewEventFormTemplate(this.#boardPoint);
+    return createNewEventFormTemplate(this.#point, this.#destination);
   }
 
   setClickHandler = (callback) => {

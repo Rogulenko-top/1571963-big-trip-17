@@ -22,14 +22,13 @@ const genearateDate = () => {
 
 export const generatePoint = () => {
   const offers = getRandomArrayElement(createTypes());
-  const destination = getRandomArrayElement(createDestinations());
   return {
     id: nanoid(),
     basePrice: getRandomInteger(10, 1000),
     dateFrom: dayjs.min(dayjs(), genearateDate().dateFrom, genearateDate().dateTo),
     dateTo: dayjs.max(dayjs(), genearateDate().dateFrom, genearateDate().dateTo),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    destination: destination,
+    destination: getRandomArrayElement(createDestinations()).name,
     offers: offers.offers,
     type: offers.type,
   };

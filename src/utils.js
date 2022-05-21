@@ -69,4 +69,43 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, getTitle, updateItem};
+// Раздел по сортировки данных
+
+// Сравнение цены
+const comparePrice = (priceA, priceB) => {
+  if (priceA > priceB) {
+    return -1;
+  }
+  if (priceA < priceB) {
+    return 1;
+  }
+  return 0;
+};
+
+//Функция сортировки по цене для передачи в метод sort
+const sortPointByPrice = (pointA, pointB) => comparePrice(pointA.basePrice, pointB.basePrice);
+
+//Сравнение времени
+const compareTime = (timeA, timeB) => {
+  if (timeA > timeB) {
+    return 1;
+  }
+  if (timeA < timeB) {
+    return -1;
+  }
+  return 0;
+};
+
+//Функция сортировки по времени для передачи в метод sort
+const sortByTime = (pointA, pointB) => {
+  const timeA = pointA.dateFrom.diff(pointA.dateTo);
+  const timeB = pointB.dateFrom.diff(pointB.dateTo);
+  return compareTime(timeA, timeB);
+};
+
+// const isPointPast = (date) => dayjs().isAfter(date, 'day');
+// const isPointFuture = (date) => dayjs().isBefore(date, 'day');
+// const isPointCurrent = (date) => dayjs().isSame(date, 'day');
+
+
+export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, getTitle, updateItem, sortPointByPrice, sortByTime };

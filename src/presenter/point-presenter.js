@@ -1,113 +1,108 @@
+import { render, replace, remove } from '../framework/render.js';
+import { MODE } from '../const.js';
+
 import EventItemView from '../view/event-item-view.js';
 import NewEventFormView from '../view/new-event-form-view.js';
 
-import { render, replace, remove } from '../framework/render.js';
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
-
-
-export default class PointPresenter{
+export default class PointPresenter {
 
   #eventListContainer = null;
 
-  #formComponent = null;
+  #pointFormComponent = null;
   #pointComponent = null;
 
   #changeData = null;
   #changeMode = null;
+  #destionationData = null;
 
   #point = null;
-  #mode = Mode.DEFAULT;
+  #mode = MODE.DEFAULT;
 
-  constructor(eventListContainer, changeData, changeMode){
+  constructor(eventListContainer, destionationData, changeData, changeMode) {
     this.#eventListContainer = eventListContainer;
+    this.#destionationData = destionationData;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
-  init = (point) =>{
+  init = (point) => {
     this.#point = point;
 
-    const prevFormComponent = this.#formComponent;
+    const prevPointFormComponent = this.#pointFormComponent;
     const prevPointComponent = this.#pointComponent;
 
-    this.#formComponent = new NewEventFormView(point);
+    this.#pointFormComponent = new NewEventFormView(point, this.#destionationData);
     this.#pointComponent = new EventItemView(point);
 
     this.#pointComponent.setClickHandler(this.#handlerFormToPointClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#formComponent.setFormSubmitHandler(this.#handlerFormSubmit);
-    this.#formComponent.setClickHandler(this.#handlerPointToFormClick);
+    this.#pointFormComponent.setFormSubmitHandler(this.#handlerFormSubmit);
+    this.#pointFormComponent.setClickHandler(this.#handlerPointToFormClick);
 
-
-    render(this.#pointComponent, this.#eventListContainer);
-
-    if (prevFormComponent === null || prevPointComponent === null) {
+    if (prevPointComponent === null || prevPointFormComponent === null) {
       render(this.#pointComponent, this.#eventListContainer);
       return;
     }
 
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#mode === MODE.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#mode === Mode.EDITING) {
-      replace(this.#formComponent, prevFormComponent);
+    if (this.#mode === MODE.EDITING) {
+      replace(this.#pointFormComponent, prevPointFormComponent);
     }
 
-    remove(prevFormComponent);
     remove(prevPointComponent);
+    remove(prevPointFormComponent);
   };
 
   destroy = () => {
-    remove(this.#formComponent);
     remove(this.#pointComponent);
+    remove(this.#pointFormComponent);
   };
 
   resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
+    if (this.#mode !== MODE.DEFAULT) {
       this.#replaceFormToPoint();
     }
   };
 
   #replaceFormToPoint = () => {
-    replace(this.#formComponent, this.#pointComponent);
+    replace(this.#pointComponent, this.#pointFormComponent);
     document.removeEventListener('keydown', this.#onEscKeyDown);
-    this.#mode = Mode.DEFAULT;
+    this.#mode = MODE.DEFAULT;
   };
 
   #replacePointToForm = () => {
-    replace(this.#pointComponent, this.#formComponent);
+    replace(this.#pointFormComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
-    this.#mode = Mode.EDITING;
+    this.#mode = MODE.EDITING;
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#replacePointToForm();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
   #handlerFormToPointClick = () => {
+    this.#replacePointToForm();
+  };
+
+  #handlerFormSubmit = (point) => {
+    this.#changeData(point);
     this.#replaceFormToPoint();
   };
 
-  #handlerFormSubmit = () => {
-    this.#replacePointToForm();
-  };
-
   #handlerPointToFormClick = () => {
-    this.#replacePointToForm();
-  };
-
-  #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#replaceFormToPoint();
   };
 
 }
