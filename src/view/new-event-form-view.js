@@ -157,11 +157,19 @@ export default class NewEventFormView extends AbstractStatefulView {
     this._state = NewEventFormView.parsePointToState(point);
     // this.#point = point;
     this.#destination = destination;
+
+    this.#setInnerHandlers();
   }
 
   get template() {
     return createNewEventFormTemplate(this._state, this.#destination);
   }
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setClickHandler(this._callback.click);
+  };
 
   static parsePointToState = (point) => ({
     ...point,
@@ -209,6 +217,28 @@ export default class NewEventFormView extends AbstractStatefulView {
     evt.preventDefault();
     // 3. А внутри абстрактного обработчика вызовем колбэк
     this._callback.click();
+  };
+
+  #pointTypeClickHandler = (evt) => {
+    if (!evt.target.classList.contains('event__type-label')) {
+      return;
+    }
+    evt.preventDefault();
+    this.updateElement({
+      checkedType: evt.target.parentNode.querySelector('.event__type-input').value,
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      checkedDestination: evt.target.value,
+    });
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-btn').addEventListener('click', this.#pointTypeClickHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
   };
 
 }
