@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { getTitle } from '../utils/point.js';
 
 const getOffers = (trip) => {
@@ -132,6 +132,15 @@ const createNewEventFormTemplate = (pointData, destinationData) => {
          <section class="event__section  event__section--destination">
            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
            <p class="event__destination-description">${description}</p>
+           <div class="event__photos-container">
+              <div class="event__photos-tape">
+                <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
+                <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
+                <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
+                <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
+                <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+              </div>
+            </div>
          </section>
        </section>
      </form>
@@ -139,19 +148,42 @@ const createNewEventFormTemplate = (pointData, destinationData) => {
   );
 };
 
-export default class NewEventFormView extends AbstractView {
-  #point = null;
+export default class NewEventFormView extends AbstractStatefulView {
+  // #point = null;
   #destination = null;
 
   constructor(point, destination){
     super();
-    this.#point = point;
+    this._state = NewEventFormView.parsePointToState(point);
+    // this.#point = point;
     this.#destination = destination;
   }
 
   get template() {
-    return createNewEventFormTemplate(this.#point, this.#destination);
+    return createNewEventFormTemplate(this._state, this.#destination);
   }
+
+  static parsePointToState = (point) => ({
+    ...point,
+    checkedType: point.type,
+    checkedDestination: point.destination
+  });
+
+  static parseStateToPoint = (state) => {
+    const point = {...state};
+
+    if (point.checkedType !== point.type) {
+      point.type = point.checkedType;
+    }
+    if (point.checkedDestination !== point.destination) {
+      point.destination = point.checkedDestination;
+    }
+
+    delete point.checkedType;
+    delete point.checkedDestination;
+
+    return point;
+  };
 
   setClickHandler = (callback) => {
     // 1. Поэтому колбэк мы запишем во внутреннее свойство
