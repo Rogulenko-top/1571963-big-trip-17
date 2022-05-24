@@ -79,7 +79,7 @@ export default class MainPresenter {
       case SORT_TYPE.TIME:
         this.#arrayDataPoint.sort(sortByTime);
         break;
-      default:
+      case SORT_TYPE.DEFAULT:
         this.#arrayDataPoint = [...this.#sourcedArrayDataPoint];
     }
 
