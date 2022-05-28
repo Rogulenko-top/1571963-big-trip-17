@@ -15,15 +15,17 @@ export default class PointPresenter {
   #changeData = null;
   #changeMode = null;
   #destionationData = null;
+  #typesOfferData = null;
 
   #point = null;
   #mode = MODE.DEFAULT;
 
-  constructor(eventListContainer, destionationData, changeData, changeMode) {
+  constructor(eventListContainer, destionationData, changeData, changeMode, typesOfferData) {
     this.#eventListContainer = eventListContainer;
     this.#destionationData = destionationData;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#typesOfferData = typesOfferData;
   }
 
   init = (point) => {
@@ -32,8 +34,8 @@ export default class PointPresenter {
     const prevPointFormComponent = this.#pointFormComponent;
     const prevPointComponent = this.#pointComponent;
 
-    this.#pointFormComponent = new NewEventFormView(point, this.#destionationData);
-    this.#pointComponent = new EventItemView(point);
+    this.#pointFormComponent = new NewEventFormView(point, this.#destionationData, this.#typesOfferData);
+    this.#pointComponent = new EventItemView(point, this.#typesOfferData);
 
     this.#pointComponent.setClickHandler(this.#handlerFormToPointClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
