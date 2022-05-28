@@ -1,4 +1,5 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/point.js';
+import { nanoid } from 'nanoid';
 
 
 const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
@@ -6,6 +7,7 @@ const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check
 const OFFERS_TITLE = ['Upgrade to a business class', 'Add luggage', 'Switch to comfort class', 'Add meal', 'Choose seats', 'Travel by train', 'Choose the radio station'];
 
 const generateOffer = () => ({
+  id: nanoid(),
   title: getRandomArrayElement(OFFERS_TITLE),
   price: getRandomInteger(10, 500),
 });

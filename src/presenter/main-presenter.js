@@ -22,20 +22,21 @@ export default class MainPresenter {
   #tripEventsDOM = null;
   #pointData = null;
   #destionationData = null;
+  #typesOfferData = null;
 
   #arrayDataPoint = [];
-  #arrayDataDestionation = [];
   #sourcedArrayDataPoint = [];
 
   #savePointView = new Map();
   #currentSortType = SORT_TYPE.DEFAULT;
 
-  constructor(tripEventsDOM, pointData, destionationData, tripMainDOM, tripFiltersDOM){
+  constructor(tripEventsDOM, pointData, destionationData, tripMainDOM, tripFiltersDOM, typesOfferData){
     this.#tripMainDOM = tripMainDOM;
     this.#tripFiltersDOM = tripFiltersDOM;
     this.#tripEventsDOM = tripEventsDOM;
     this.#pointData = pointData;
     this.#destionationData = destionationData;
+    this.#typesOfferData = typesOfferData;
   }
 
   init = () => {
@@ -43,7 +44,7 @@ export default class MainPresenter {
 
     this.#arrayDataPoint = [...this.#pointData.points];
     this.#sourcedArrayDataPoint = [...this.#pointData.points];
-    this.#arrayDataDestionation = [...this.#destionationData.destinations];
+
 
     this.#renderСonditionPointsView();
   };
@@ -79,7 +80,7 @@ export default class MainPresenter {
       case SORT_TYPE.TIME:
         this.#arrayDataPoint.sort(sortByTime);
         break;
-      default:
+      case SORT_TYPE.DEFAULT:
         this.#arrayDataPoint = [...this.#sourcedArrayDataPoint];
     }
 
@@ -99,7 +100,7 @@ export default class MainPresenter {
   #renderAmountPointsView = () => {
     render(this.#eventListView, this.#tripEventsDOM);
     for (let i = 0; i < this.#arrayDataPoint.length; i++) {
-      this.#renderCreatePointView(this.#arrayDataPoint[i], this.#arrayDataDestionation[i]);
+      this.#renderCreatePointView(this.#arrayDataPoint[i]);
     }
   };
 
@@ -109,8 +110,8 @@ export default class MainPresenter {
     this.#savePointView.get(updatedPoint.id).init(updatedPoint);
   };
 
-  #renderCreatePointView = (point, destionation) => {
-    const pointPresenter = new PointPresenter(this.#eventListView.element, destionation, this.#handlePointChange, this.#handleModeChange);
+  #renderCreatePointView = (point) => {
+    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#destionationData, this.#handlePointChange, this.#handleModeChange, this.#typesOfferData);
     pointPresenter.init(point);
     this.#savePointView.set(point.id, pointPresenter);
   };

@@ -48,7 +48,9 @@ export default class TripSortView extends AbstractView {
 
     evt.preventDefault();
     const attributeTarget = evt.target.getAttribute('for');
-    this.element.querySelector(`#${attributeTarget}`).checked = true;
+    if (attributeTarget === 'sort-day' || attributeTarget === 'sort-time' || attributeTarget === 'sort-price') {
+      this.element.querySelector(`#${attributeTarget}`).checked = true;
+    }
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
 

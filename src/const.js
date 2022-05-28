@@ -16,4 +16,12 @@ const FILTER_TYPE = {
   PAST: 'past',
 };
 
-export { MODE, SORT_TYPE, FILTER_TYPE };
+const BLANK_POINT = {
+  type: 'taxi',
+  destination: 'Amsterdam',
+  dateFrom: null,
+  dateTo: null,
+  basePrice: null,
+};
+
+export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT };
