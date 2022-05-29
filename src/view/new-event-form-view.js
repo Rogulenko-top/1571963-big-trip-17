@@ -1,7 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { getTitle } from '../utils/point.js';
 import { BLANK_POINT } from '../const.js';
-const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
   const checked = type === checkedType ? 'checked' : '';
@@ -12,8 +13,10 @@ const renderPointTypes = (types, checkedType) => Object.values(types).map((type)
   </div>`;
 }).join('');
 
-const createPointTypesTemplate = (checkedType) => (
-  `<div class='event__type-wrapper'>
+const createPointTypesTemplate = (allOffers, checkedType) => {
+  const arrayOfferTypes = allOffers.map((offer) => `${offer.type}`);
+  return`
+  <div class='event__type-wrapper'>
     <label class='event__type  event__type-btn' for='event-type-toggle-1'>
       <span class='visually-hidden'>Choose event type</span>
       <img class='event__type-icon' width='17' height='17' src='img/icons/${checkedType}.png' alt='Event type icon'>
@@ -22,15 +25,14 @@ const createPointTypesTemplate = (checkedType) => (
     <div class='event__type-list'>
       <fieldset class='event__type-group'>
         <legend class='visually-hidden'>Event type</legend>
-        ${renderPointTypes(TYPES, checkedType)}
+        ${renderPointTypes(arrayOfferTypes, checkedType)}
       </fieldset>
     </div>
-  </div>`
-);
+  </div>`;
+};
 
 const renderDestinations = (allDestinations) => {
-  const template = allDestinations.map((destination) =>
-    `<option value=${destination.name}></option>`);
+  const template = allDestinations.map((destination) =>`<option value=${destination.name}></option>`);
 
   return`<option value=${template}></option>`;
 };
@@ -102,7 +104,7 @@ const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) =>
 const createNewEventFormTemplate = (point, destinationData, offersData) => {
   const { basePrice, dateFrom, dateTo, checkedDestination, checkedType, offers } = point;
 
-  const pointTypesTemplate = createPointTypesTemplate(checkedType);
+  const pointTypesTemplate = createPointTypesTemplate(offersData, checkedType);
   const destinationaTempalte = createDestinationsTemplate(point, checkedType, checkedDestination, destinationData);
   const destinationPhotoTemplate = createDestinationPhotoTemplate(destinationData, checkedDestination);
   const offersTemplate = createAvailableOffersTemplate(checkedType, offersData, offers);
@@ -147,6 +149,7 @@ const createNewEventFormTemplate = (point, destinationData, offersData) => {
 export default class NewEventFormView extends AbstractStatefulView {
   #destination = null;
   #offers = null;
+  #datepicker = null;
 
   constructor(point = BLANK_POINT, destination, offers){
     super();
@@ -155,6 +158,8 @@ export default class NewEventFormView extends AbstractStatefulView {
     this.#offers = offers.typesOffer;
 
     this.#setInnerHandlers();
+    this.#setDateFromDatepicker();
+    this.#setDateToDatepicker();
   }
 
   get template() {
@@ -163,8 +168,19 @@ export default class NewEventFormView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDateFromDatepicker();
+    this.#setDateToDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setClickHandler(this._callback.click);
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   };
 
   reset = (point) => {
@@ -238,9 +254,74 @@ export default class NewEventFormView extends AbstractStatefulView {
     });
   };
 
+  #basePriceHandler = (evt) => {
+    evt.preventDefault();
+    const reg = /^(?:[1-9]\d*|\d)$/;
+    this._setState({
+      price: reg.test(evt.target.value) ? evt.target.value : '',
+    });
+  };
+
+  #offersToggleHandler = (evt) => {
+    if (!evt.target.classList.contains('event__offer-checkbox')) {
+      return;
+    }
+
+    const оffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
+      .filter((element) => element.checked)
+      .map((element) => Number(element.dataset.offerId));
+
+    this._setState({
+      checkedOffers: оffers,
+    });
+  };
+
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('click', this.#pointTypeClickHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#basePriceHandler);
+    if (this.element.querySelector('.event__available-offers')) {
+      this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersToggleHandler);
+    }
   };
 
+  #setDateFromDatepicker = () => {
+    if ( this._state.dateFrom ) {
+      this.#datepicker = flatpickr(
+        this.element.querySelector('#event-start-time-1'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._state.dateFrom,
+          onChange: this.#dateFromChangeHandler
+        }
+      );
+    }
+  };
+
+  #setDateToDatepicker = () => {
+    if ( this._state.dateTo ) {
+      this.#datepicker = flatpickr(
+        this.element.querySelector('#event-end-time-1'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._state.dateTo,
+          onChange: this.#dateToChangeHandler
+        }
+      );
+    }
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this._setState({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this._setState({
+      dateTo: userDate,
+    });
+  };
 }
