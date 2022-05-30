@@ -1,28 +1,40 @@
-import {getRandomInteger, getRandomMultipleArrayElement} from '../utils/point.js';
 
-const CITIES_LIBRARY = ['Tokyo','Wellington', 'Canberra', 'Toronto', 'Oslo'];
-
-const DESCRIPTIONS_LIBRARY = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','Cras aliquet varius magna, non porta ligula feugiat eget.','Fusce tristique felis at fermentum pharetra.','Aliquam id orci ut lectus varius viverra.','Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.','Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.','Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.','Sed sed nisi sed augue convallis suscipit in sed felis.','Aliquam erat volutpat.','Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
+const allDestinationData = [
+  {
+    description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+    name: 'Chamonix',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=1',
+        description: 'Chamonix parliament building'
+      }
+    ]
+  },
+  {
+    description: 'Amsterdam, is a beautiful city, a true asian pearl, with crowded streets.',
+    name: 'Amsterdam',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=2',
+        description: 'Amsterdam parliament building'
+      }
+    ]
+  },
+  {
+    description: 'Geneva, is a beautiful city, a true asian pearl, with crowded streets.',
+    name: 'Geneva',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=3',
+        description: 'Geneva parliament building'
+      },
+      {
+        src: 'http://picsum.photos/300/200?r=4',
+        description: 'Geneva parliament building'
+      }
+    ]
+  },
 ];
 
-const generatePicture = () => ({
-  photo: `http://picsum.photos/248/152?${getRandomInteger(0,100)}`,
-  description: Object.values(getRandomMultipleArrayElement(DESCRIPTIONS_LIBRARY)).join(' '),
-});
-
-
-const createDestinations = () => {
-  const destinations = [];
-  CITIES_LIBRARY.forEach((city) => {
-    destinations.push({
-      name: city,
-      description: Object.values(getRandomMultipleArrayElement(DESCRIPTIONS_LIBRARY)).join(' '),
-      pictures: new Array(getRandomInteger(1, 5)).fill().map(() => generatePicture()),
-    });
-  });
-  return destinations;
-};
-
-export {createDestinations};
+export {allDestinationData};
 

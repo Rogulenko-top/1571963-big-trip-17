@@ -1,35 +1,24 @@
-import {createTypes} from './offer-mock.js';
-import {createDestinations} from './destination-mock.js';
+import { TYPES_LIBRARY, BASE_PRICE, DESTINATIONS } from '../const.js';
 import {getRandomInteger, getRandomArrayElement} from '../utils/point.js';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc.js';
-import minMax from 'dayjs/plugin/minMax.js';
 import { nanoid } from 'nanoid';
-dayjs.extend(utc);
-dayjs.extend(minMax);
 
 
-const genearateDate = () => {
-  const maxDaysGap = 30;
-  const maxTimeGap = 10;
-  const firstDayGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  const secondDayGap = getRandomInteger(firstDayGap, maxDaysGap);
-  return {
-    dateFrom: dayjs.utc().add(firstDayGap, 'day').add(getRandomInteger(0, maxTimeGap), 'minute').add(getRandomInteger(0, maxTimeGap), 'hour'),
-    dateTo: dayjs.utc().add(secondDayGap, 'day').add(getRandomInteger(0, maxTimeGap), 'minute').add(getRandomInteger(0, maxTimeGap), 'hour'),
-  };
-};
+const generateBasePrice = () => getRandomArrayElement(BASE_PRICE);
+
+const generateDestination = () => getRandomArrayElement(DESTINATIONS);
+
+const generateType = () => getRandomArrayElement(TYPES_LIBRARY);
 
 export const generatePoint = () => {
-  const offers = getRandomArrayElement(createTypes());
+  const typePoint = generateType();
   return {
     id: nanoid(),
-    basePrice: getRandomInteger(10, 1000),
-    dateFrom: dayjs.min(dayjs(), genearateDate().dateFrom, genearateDate().dateTo),
-    dateTo: dayjs.max(dayjs(), genearateDate().dateFrom, genearateDate().dateTo),
+    basePrice: generateBasePrice(),
+    dateFrom: `2022-05-${getRandomInteger(15, 20)}T0${getRandomInteger(1, 3)}:16:54.401Z`,
+    dateTo: `2022-05-${getRandomInteger(20, 25)}T0${getRandomInteger(3, 5)}:${getRandomInteger(17, 59)}:54.401Z`,
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    destination: getRandomArrayElement(createDestinations()).name,
-    offers: offers.offers,
-    type: offers.type,
+    destination: generateDestination(),
+    offers: [1],
+    type: typePoint,
   };
 };

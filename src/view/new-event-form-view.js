@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { getTitle } from '../utils/point.js';
-import { BLANK_POINT } from '../const.js';
+import { humanizePointDateAndTime  } from '../utils/point.js';
+import { BLANK_POINT, TYPES_LIBRARY } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -13,10 +13,8 @@ const renderPointTypes = (types, checkedType) => Object.values(types).map((type)
   </div>`;
 }).join('');
 
-const createPointTypesTemplate = (allOffers, checkedType) => {
-  const arrayOfferTypes = allOffers.map((offer) => `${offer.type}`);
-  return`
-  <div class='event__type-wrapper'>
+const createPointTypesTemplate = (checkedType) => (
+  `<div class='event__type-wrapper'>
     <label class='event__type  event__type-btn' for='event-type-toggle-1'>
       <span class='visually-hidden'>Choose event type</span>
       <img class='event__type-icon' width='17' height='17' src='img/icons/${checkedType}.png' alt='Event type icon'>
@@ -25,21 +23,17 @@ const createPointTypesTemplate = (allOffers, checkedType) => {
     <div class='event__type-list'>
       <fieldset class='event__type-group'>
         <legend class='visually-hidden'>Event type</legend>
-        ${renderPointTypes(arrayOfferTypes, checkedType)}
+        ${renderPointTypes(TYPES_LIBRARY, checkedType)}
       </fieldset>
     </div>
-  </div>`;
-};
+  </div>`
+);
 
-const renderDestinations = (allDestinations) => {
-  const template = allDestinations.map((destination) =>`<option value=${destination.name}></option>`);
+const renderDestinations = (allDestinations) => allDestinations.map((destination) => `<option value=${destination.name}></option>`).join('');
 
-  return`<option value=${template}></option>`;
-};
-
-const createDestinationsTemplate = (point, type, destination, allDestinations) => (
+const createDestinationsTemplate = (type, destination, allDestinations) => (
   `<div class="event__field-group  event__field-group--destination">
-    <label class="event__label  event__type-output" for="event-destination-1">${type} ${getTitle(point)}</label>
+    <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
     <datalist id="destination-list-1">
       ${renderDestinations(allDestinations)}
@@ -49,12 +43,8 @@ const createDestinationsTemplate = (point, type, destination, allDestinations) =
 
 const renderPhotos = (allDestinations, checkedDestination) => {
   const pointDestination = allDestinations.find((destination) => destination.name === checkedDestination);
-  let picturesTemplate = '';
-  pointDestination.pictures.forEach((picture) =>{
-    const {photo} = picture;
-    picturesTemplate += `
-  <img class="event__photo" src="${photo}" alt="${picture.description}">`;});
-  return picturesTemplate;
+
+  return pointDestination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 };
 
 const createDestinationPhotoTemplate = (allDestinations, checkedDestination) => {
@@ -102,12 +92,15 @@ const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) =>
 };
 
 const createNewEventFormTemplate = (point, destinationData, offersData) => {
-  const { basePrice, dateFrom, dateTo, checkedDestination, checkedType, offers } = point;
+  const { price, dateFrom, dateTo, checkedDestination, checkedType, checkedOffers } = point;
 
-  const pointTypesTemplate = createPointTypesTemplate(offersData, checkedType);
-  const destinationaTempalte = createDestinationsTemplate(point, checkedType, checkedDestination, destinationData);
+  const pointTypesTemplate = createPointTypesTemplate(checkedType);
+  const destinationaTempalte = createDestinationsTemplate(checkedType, checkedDestination, destinationData);
   const destinationPhotoTemplate = createDestinationPhotoTemplate(destinationData, checkedDestination);
-  const offersTemplate = createAvailableOffersTemplate(checkedType, offersData, offers);
+  const offersTemplate = createAvailableOffersTemplate(checkedType, offersData, checkedOffers);
+
+  const newDateFrom = dateFrom !== null ? humanizePointDateAndTime(dateFrom) : '';
+  const newDateTo = dateTo !== null ? humanizePointDateAndTime(dateTo) : '';
 
   return (
     `<li class="trip-events__item">
@@ -119,17 +112,17 @@ const createNewEventFormTemplate = (point, destinationData, offersData) => {
           ${destinationaTempalte}
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom.format('YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${newDateFrom}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo.format('YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${newDateTo}">
           </div>
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price-1">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
@@ -154,8 +147,8 @@ export default class NewEventFormView extends AbstractStatefulView {
   constructor(point = BLANK_POINT, destination, offers){
     super();
     this._state = NewEventFormView.parsePointToState(point);
-    this.#destination = destination.destinations;
-    this.#offers = offers.typesOffer;
+    this.#destination = destination;
+    this.#offers = offers;
 
     this.#setInnerHandlers();
     this.#setDateFromDatepicker();
@@ -185,7 +178,7 @@ export default class NewEventFormView extends AbstractStatefulView {
 
   reset = (point) => {
     this.updateElement(
-      NewEventFormView.parseTaskToState(point),
+      NewEventFormView.parsePointToState(point),
     );
   };
 
@@ -193,6 +186,8 @@ export default class NewEventFormView extends AbstractStatefulView {
     ...point,
     checkedType: point.type,
     checkedDestination: point.destination,
+    price: point.basePrice,
+    checkedOffers: point.offers,
   });
 
   static parseStateToPoint = (state) => {
@@ -204,9 +199,13 @@ export default class NewEventFormView extends AbstractStatefulView {
     if (point.checkedDestination !== point.destination) {
       point.destination = point.checkedDestination;
     }
+    point.basePrice = point.price;
+    point.offers = point.checkedOffers;
 
     delete point.checkedType;
     delete point.checkedDestination;
+    delete point.price;
+    delete point.checkedOffers;
 
     return point;
   };

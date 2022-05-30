@@ -2,12 +2,12 @@
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc.js';
-import minMax from 'dayjs/plugin/minMax.js';
 import duration from 'dayjs/plugin/duration.js';
-dayjs.extend(utc);
-dayjs.extend(minMax);
 dayjs.extend(duration);
+
+const humanizePointDate = (date) => dayjs(date).format('HH:mm');
+const humanizeEventDate = (date) => dayjs(date).format('MMM D');
+const humanizePointDateAndTime = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -27,8 +27,9 @@ const getRandomMultipleArrayElement = (elements) => {
   const array = elements.slice(0, randomArrayNumber);
   return array;
 };
+
 const getDurationDates = (dateStart, dateFinish) => {
-  const diff = dateFinish.diff(dateStart);
+  const diff = dayjs(dateFinish).diff(dateStart);
   const daysCount = dayjs.duration(diff).format('DD');
   const hoursCount = dayjs.duration(diff).format('HH');
   const minutesCount = dayjs.duration(diff).format('mm');
@@ -43,17 +44,6 @@ const getDurationDates = (dateStart, dateFinish) => {
   }
 };
 
-
-const getTitle = (boardPoint) => {
-  let pretextTitle = 'to';
-  if (boardPoint.type.includes('sightseeing') || boardPoint.type.includes('restaurant')) {
-    pretextTitle = 'in';
-  }
-  if (boardPoint.type.includes('check-in')) {
-    pretextTitle = 'at';
-  }
-  return pretextTitle;
-};
 
 const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
@@ -98,8 +88,8 @@ const compareTime = (timeA, timeB) => {
 
 //Функция сортировки по времени для передачи в метод sort
 const sortByTime = (pointA, pointB) => {
-  const timeA = pointA.dateFrom.diff(pointA.dateTo);
-  const timeB = pointB.dateFrom.diff(pointB.dateTo);
+  const timeA = dayjs(pointA.dateFrom).diff(dayjs(pointA.dateTo));
+  const timeB = dayjs(pointB.dateFrom).diff(dayjs(pointB.dateTo));
   return compareTime(timeA, timeB);
 };
 
@@ -108,4 +98,4 @@ const isPointFuture = (date) => dayjs().isBefore(date, 'day');
 const isPointCurrent = (date) => dayjs().isSame(date, 'day');
 
 
-export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, getTitle, updateItem, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent };
+export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, updateItem, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent, humanizePointDate, humanizeEventDate, humanizePointDateAndTime };

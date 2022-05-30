@@ -1,4 +1,16 @@
 
+const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+const OFFERS_TITLE = ['Upgrade to a business class', 'Add luggage', 'Switch to comfort class', 'Add meal', 'Choose seats', 'Travel by train', 'Choose the radio station'];
+
+const CITIES_LIBRARY = ['Tokyo','Wellington', 'Canberra', 'Toronto', 'Oslo'];
+
+const BASE_PRICE = [20, 50, 160, 180, 600];
+
+const DESTINATIONS = ['Amsterdam', 'Chamonix', 'Geneva'];
+
+const NUM_OF_POINTS = 5;
+
 const MODE = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
@@ -24,4 +36,4 @@ const BLANK_POINT = {
   basePrice: null,
 };
 
-export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT };
+export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, OFFERS_TITLE, CITIES_LIBRARY, BASE_PRICE, DESTINATIONS, NUM_OF_POINTS };

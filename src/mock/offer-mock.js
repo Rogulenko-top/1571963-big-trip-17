@@ -1,26 +1,107 @@
-import {getRandomInteger, getRandomArrayElement} from '../utils/point.js';
-import { nanoid } from 'nanoid';
+import { getRandomInteger } from '../utils/point.js';
 
 
-const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const typesOffer = [
+  {
+    type: 'taxi',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: getRandomInteger(0, 100)
+      }, {
+        id: 2,
+        title: 'Choose the radio station',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'bus',
+    offers: [
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'train',
+    offers: [
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'check-in',
+    offers: [
+      {
+        id: 1,
+        title: 'Add breakfast',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'ship',
+    offers: [
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'drive',
+    offers: [
+      {
+        id: 1,
+        title: 'Rent a car',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'flight',
+    offers: [
+      {
+        id: 1,
+        title: 'Switch to comfort',
+        price: getRandomInteger(0, 100)
+      },
+      {
+        id: 2,
+        title: 'Add luggage',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'sightseeing',
+    offers: [
+      {
+        id: 1,
+        title: 'Book tickets',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+  {
+    type: 'restaurant',
+    offers: [
+      {
+        id: 1,
+        title: 'Wi-Fi',
+        price: getRandomInteger(0, 100)
+      }
+    ]
+  },
+];
 
-const OFFERS_TITLE = ['Upgrade to a business class', 'Add luggage', 'Switch to comfort class', 'Add meal', 'Choose seats', 'Travel by train', 'Choose the radio station'];
-
-const generateOffer = () => ({
-  id: nanoid(),
-  title: getRandomArrayElement(OFFERS_TITLE),
-  price: getRandomInteger(10, 500),
-});
-
-const createTypes = () => {
-  const types = [];
-  TYPES_LIBRARY.forEach((typeName) => {
-    types.push({
-      type: typeName,
-      offers: new Array(getRandomInteger(0, 5)).fill().map(() => generateOffer()),
-    });
-  });
-  return types;
-};
-export {createTypes};
+export {typesOffer};
 
