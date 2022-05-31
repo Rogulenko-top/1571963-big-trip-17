@@ -6,7 +6,7 @@ import HeadPresenter from './head-presenter.js';
 import { SORT_TYPE } from '../const.js';
 
 import { render } from '../framework/render.js';
-import { updateItem, sortPointByPrice, sortByTime } from '../utils/point.js';
+import { sortPointByPrice, sortByTime } from '../utils/point.js';
 
 export default class MainPresenter {
 
@@ -24,9 +24,6 @@ export default class MainPresenter {
   #destionationData = null;
   #typesOfferData = null;
 
-  #arrayDataPoint = [];
-  #sourcedArrayDataPoint = [];
-
   #savePointView = new Map();
   #currentSortType = SORT_TYPE.DEFAULT;
 
@@ -42,14 +39,16 @@ export default class MainPresenter {
   init = () => {
     this.#renderHeadPresenter();
 
-    this.#arrayDataPoint = [...this.#pointData.points];
-    this.#sourcedArrayDataPoint = [...this.#pointData.points];
-
-
     this.#renderСonditionPointsView();
   };
 
   get points(){
+    switch (this.#currentSortType) {
+      case SORT_TYPE.PRICE:
+        return [...this.#pointData.points].sort(sortPointByPrice);
+      case SORT_TYPE.TIME:
+        return [...this.#pointData.points].sort(sortByTime);
+    }
     return this.#pointData.points;
   }
 
@@ -76,41 +75,25 @@ export default class MainPresenter {
     this.#savePointView.forEach((presenter) => presenter.resetView());
   };
 
-  #sortPoints = (sortType) => {
-    switch (sortType) {
-      case SORT_TYPE.PRICE:
-        this.#arrayDataPoint.sort(sortPointByPrice);
-        break;
-      case SORT_TYPE.TIME:
-        this.#arrayDataPoint.sort(sortByTime);
-        break;
-      case SORT_TYPE.DEFAULT:
-        this.#arrayDataPoint = [...this.#sourcedArrayDataPoint];
-    }
-
-    this.#currentSortType = sortType;
-  };
-
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPointsList();
     this.#renderAmountPointsView();
   };
 
   #renderAmountPointsView = () => {
     render(this.#eventListView, this.#tripEventsDOM);
-    for (let i = 0; i < this.#arrayDataPoint.length; i++) {
-      this.#renderCreatePointView(this.#arrayDataPoint[i]);
+    for (let i = 0; i < this.points.length; i++) {
+      this.#renderCreatePointView(this.points[i]);
     }
   };
 
   #handlePointChange = (updatedPoint) => {
-    this.#arrayDataPoint = updateItem(this.#arrayDataPoint, updatedPoint);
-    this.#sourcedArrayDataPoint = updateItem(this.#sourcedArrayDataPoint, updatedPoint);
+
     this.#savePointView.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -121,7 +104,7 @@ export default class MainPresenter {
   };
 
   #renderСonditionPointsView = () => {
-    if(this.#arrayDataPoint.length === 0){
+    if(this.points.length === 0){
       this.#renderListEmptyView();
       return;
     }
