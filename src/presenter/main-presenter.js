@@ -49,6 +49,10 @@ export default class MainPresenter {
     this.#renderСonditionPointsView();
   };
 
+  get points(){
+    return this.#pointData.points;
+  }
+
   #renderHeadPresenter = () => {
     this.#headPresenter = new HeadPresenter(this.#tripMainDOM, this.#tripFiltersDOM, this.#pointData.points);
     this.#headPresenter.init();
