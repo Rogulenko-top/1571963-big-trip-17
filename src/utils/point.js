@@ -44,21 +44,6 @@ const getDurationDates = (dateStart, dateFinish) => {
   }
 };
 
-
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
-
 // Раздел по сортировки данных
 
 // Сравнение цены
@@ -98,4 +83,4 @@ const isPointFuture = (date) => dayjs().isBefore(date, 'day');
 const isPointCurrent = (date) => dayjs().isSame(date, 'day');
 
 
-export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, updateItem, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent, humanizePointDate, humanizeEventDate, humanizePointDateAndTime };
+export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent, humanizePointDate, humanizeEventDate, humanizePointDateAndTime };

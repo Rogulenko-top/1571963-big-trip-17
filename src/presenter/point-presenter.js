@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render.js';
-import { MODE } from '../const.js';
+import { MODE, USER_ACTION, UPDATE_TYPE } from '../const.js';
 
 import EventItemView from '../view/event-item-view.js';
 import NewEventFormView from '../view/new-event-form-view.js';
@@ -84,7 +84,11 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#changeData(
+      USER_ACTION.UPDATE_TASK,
+      UPDATE_TYPE.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #onEscKeyDown = (evt) => {
@@ -99,7 +103,10 @@ export default class PointPresenter {
   };
 
   #handlerFormSubmit = (point) => {
-    this.#changeData(point);
+    this.#changeData(
+      USER_ACTION.UPDATE_TASK,
+      UPDATE_TYPE.MINOR,
+      point);
     this.#replaceFormToPoint();
   };
 

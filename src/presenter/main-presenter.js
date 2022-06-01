@@ -34,6 +34,8 @@ export default class MainPresenter {
     this.#pointData = pointData;
     this.#destionationData = destionationData;
     this.#typesOfferData = typesOfferData;
+
+    this.#pointData.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
@@ -92,13 +94,24 @@ export default class MainPresenter {
     }
   };
 
-  #handlePointChange = (updatedPoint) => {
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
 
-    this.#savePointView.get(updatedPoint.id).init(updatedPoint);
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #renderCreatePointView = (point) => {
-    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#destionationData, this.#handlePointChange, this.#handleModeChange, this.#typesOfferData);
+    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#destionationData, this.#handleViewAction, this.#handleModeChange, this.#typesOfferData);
     pointPresenter.init(point);
     this.#savePointView.set(point.id, pointPresenter);
   };
