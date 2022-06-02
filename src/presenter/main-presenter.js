@@ -3,7 +3,7 @@ import EventListView from '../view/event-list-view.js';
 import TripListEmptyView from '../view/trip-list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import HeadPresenter from './head-presenter.js';
-import { SORT_TYPE } from '../const.js';
+import { SORT_TYPE, UpdateType, UserAction } from '../const.js';
 
 import { render } from '../framework/render.js';
 import { sortPointByPrice, sortByTime } from '../utils/point.js';
@@ -95,19 +95,44 @@ export default class MainPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_TASK:
+        this.#pointData.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_TASK:
+        this.#pointData.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_TASK:
+        this.#pointData.deletePoint(updateType, update);
+        break;
+    }
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
     // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#savePointView.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearPointsList();
+        this.#renderСonditionPointsView();
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        this.#clearPointsList({ resetSortType: true });
+        this.#renderСonditionPointsView();
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   #renderCreatePointView = (point) => {
@@ -117,7 +142,9 @@ export default class MainPresenter {
   };
 
   #renderСonditionPointsView = () => {
-    if(this.points.length === 0){
+    const points = this.points;
+    const pointCount = points.length;
+    if(pointCount === 0){
       this.#renderListEmptyView();
       return;
     }

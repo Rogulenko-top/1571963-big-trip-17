@@ -12,13 +12,13 @@ const generateType = () => getRandomArrayElement(TYPES_LIBRARY);
 export const generatePoint = () => {
   const typePoint = generateType();
   return {
-    id: nanoid(),
     basePrice: generateBasePrice(),
-    dateFrom: `2022-05-${getRandomInteger(15, 20)}T0${getRandomInteger(1, 3)}:16:54.401Z`,
-    dateTo: `2022-05-${getRandomInteger(20, 25)}T0${getRandomInteger(3, 5)}:${getRandomInteger(17, 59)}:54.401Z`,
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    dateFrom: `2022-05-${getRandomInteger(30, 31)}T0${getRandomInteger(1, 2)}:00:00.401Z`,
+    dateTo: `2022-05-${getRandomInteger(31, 31)}T${getRandomInteger(10, 23)}:${getRandomInteger(11, 59)}:00.401Z`,
     destination: generateDestination(),
-    offers: [1],
+    id: nanoid(),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     type: typePoint,
+    offers: [1]
   };
 };

@@ -82,5 +82,7 @@ const isPointPast = (date) => dayjs().isAfter(date, 'day');
 const isPointFuture = (date) => dayjs().isBefore(date, 'day');
 const isPointCurrent = (date) => dayjs().isSame(date, 'day');
 
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
-export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent, humanizePointDate, humanizeEventDate, humanizePointDateAndTime };
+
+export {getRandomInteger, getRandomArrayElement, getRandomMultipleArrayElement, getDurationDates, sortPointByPrice, sortByTime, isPointPast, isPointFuture, isPointCurrent, humanizePointDate, humanizeEventDate, humanizePointDateAndTime, isDatesEqual };

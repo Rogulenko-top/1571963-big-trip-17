@@ -165,6 +165,7 @@ export default class NewEventFormView extends AbstractStatefulView {
     this.#setDateToDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setClickHandler(this._callback.click);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   removeElement = () => {
@@ -236,6 +237,16 @@ export default class NewEventFormView extends AbstractStatefulView {
     this._callback.click(NewEventFormView.parseStateToPoint(this._state));
   };
 
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(NewEventFormView.parseStateToPoint(this._state));
+  };
+
   #pointTypeClickHandler = (evt) => {
     if (!evt.target.classList.contains('event__type-label')) {
       return;
@@ -243,6 +254,7 @@ export default class NewEventFormView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       checkedType: evt.target.parentNode.querySelector('.event__type-input').value,
+      checkedOffers: []
     });
   };
 
@@ -323,4 +335,5 @@ export default class NewEventFormView extends AbstractStatefulView {
       dateTo: userDate,
     });
   };
+
 }
