@@ -88,7 +88,7 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite},
     );
@@ -111,7 +111,7 @@ export default class PointPresenter {
       isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
       this.#point.basePrice !== update.basePrice;
     this.#changeData(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update);
     this.#replaceFormToPoint();
@@ -123,7 +123,7 @@ export default class PointPresenter {
 
   #handleDeleteClick = (point) => {
     this.#changeData(
-      UserAction.DELETE_TASK,
+      UserAction.DELETE_POINT,
       UpdateType.MINOR,
       point,
     );

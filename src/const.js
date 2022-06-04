@@ -29,17 +29,18 @@ const FILTER_TYPE = {
 };
 
 const BLANK_POINT = {
-  type: 'taxi',
-  destination: 'Amsterdam',
+  basePrice: '',
   dateFrom: null,
   dateTo: null,
-  basePrice: null,
+  destination: 'Amsterdam',
+  type: 'taxi',
+  offers: [],
 };
 
 const UserAction = {
-  UPDATE_TASK: 'UPDATE_TASK',
-  ADD_TASK: 'ADD_TASK',
-  DELETE_TASK: 'DELETE_TASK',
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
 };
 
 const UpdateType = {

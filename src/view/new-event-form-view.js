@@ -3,6 +3,8 @@ import { humanizePointDateAndTime  } from '../utils/point.js';
 import { BLANK_POINT, TYPES_LIBRARY } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Russian } from 'flatpickr/dist/l10n/ru.js';
+import he from 'he';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
   const checked = type === checkedType ? 'checked' : '';
@@ -34,7 +36,7 @@ const renderDestinations = (allDestinations) => allDestinations.map((destination
 const createDestinationsTemplate = (type, destination, allDestinations) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1">
     <datalist id="destination-list-1">
       ${renderDestinations(allDestinations)}
     </datalist>
@@ -234,7 +236,7 @@ export default class NewEventFormView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     // 3. А внутри абстрактного обработчика вызовем колбэк
-    this._callback.click(NewEventFormView.parseStateToPoint(this._state));
+    this._callback.formSubmit(NewEventFormView.parseStateToPoint(this._state));
   };
 
   setDeleteClickHandler = (callback) => {
@@ -297,41 +299,40 @@ export default class NewEventFormView extends AbstractStatefulView {
   };
 
   #setDateFromDatepicker = () => {
-    if ( this._state.dateFrom ) {
-      this.#datepicker = flatpickr(
-        this.element.querySelector('#event-start-time-1'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          defaultDate: this._state.dateFrom,
-          onChange: this.#dateFromChangeHandler
-        }
-      );
-    }
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        locale: Russian,
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
   };
 
   #setDateToDatepicker = () => {
-    if ( this._state.dateTo ) {
-      this.#datepicker = flatpickr(
-        this.element.querySelector('#event-end-time-1'),
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          defaultDate: this._state.dateTo,
-          onChange: this.#dateToChangeHandler
-        }
-      );
-    }
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        locale: Russian,
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
   };
 
   #dateFromChangeHandler = ([userDate]) => {
-    this._setState({
+    this.updateElement({
       dateFrom: userDate,
     });
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this._setState({
+    this.updateElement({
       dateTo: userDate,
     });
   };
