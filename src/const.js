@@ -23,9 +23,9 @@ const SORT_TYPE = {
 };
 
 const FILTER_TYPE = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PAST: 'past',
+  EVERYTHING: 'EVERYTHING',
+  FUTURE: 'FUTURE',
+  PAST: 'PAST',
 };
 
 const BLANK_POINT = {

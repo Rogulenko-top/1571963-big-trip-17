@@ -45,14 +45,11 @@ export default class MainPresenter {
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    // eslint-disable-next-line no-console
-    console.log(this.#filterType);
+
     const tasks = this.#pointData.points;
-    // eslint-disable-next-line no-console
-    console.log(tasks);
+
     const filteredPoints = filter[this.#filterType](tasks);
-    // eslint-disable-next-line no-console
-    console.log(filteredPoints);
+
     switch (this.#currentSortType) {
       case SORT_TYPE.PRICE:
         return filteredPoints.sort(sortPointByPrice);
