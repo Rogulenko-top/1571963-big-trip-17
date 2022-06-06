@@ -4,7 +4,6 @@ import TripListEmptyView from '../view/trip-list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
 
-// import FilterModel from '../model/filter-model.js';
 import { SORT_TYPE, UpdateType, UserAction, FILTER_TYPE } from '../const.js';
 
 import { remove, render, RenderPosition } from '../framework/render.js';
