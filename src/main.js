@@ -45,5 +45,5 @@ newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
 
 filterPresenter.init();
 mainPresenter.init();
-
+pointModel.init();
 

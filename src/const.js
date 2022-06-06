@@ -47,6 +47,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const AUTHORIZATION = 'Basic AS277S44w9l1sl2j';

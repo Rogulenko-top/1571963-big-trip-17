@@ -1,23 +1,32 @@
-import { generatePoint } from '../mock/point-mock.js';
-import { NUM_OF_POINTS } from '../const.js';
+// import { generatePoint } from '../mock/point-mock.js';
+// import { NUM_OF_POINTS } from '../const.js';
+import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
-  #points = Array.from({ length: NUM_OF_POINTS }, generatePoint);
+  #points = [];
 
   #pointsApiService = null;
 
   constructor(pointsApiService) {
     super();
     this.#pointsApiService = pointsApiService;
-
-    // eslint-disable-next-line no-console
-    this.#pointsApiService.points.then((points) => {console.log(points.map(this.#adaptToClient));});
   }
 
   get points() {
     return this.#points;
   }
+
+  init = async () => {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch (err) {
+      this.#points = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  };
 
   updatePoint = (updateType, update) => {
     const index = this.#points.findIndex((point) => point.id === update.id);
