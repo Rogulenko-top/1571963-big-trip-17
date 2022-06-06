@@ -4,6 +4,8 @@ import PointModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import { allDestinationData } from './mock/destination-mock.js';
 import { typesOffer } from './mock/offer-mock.js';
+import PointsApiService from './points-api-service.js';
+import { AUTHORIZATION, END_POINT } from './const.js';
 
 //кнопка
 import { render, RenderPosition } from './framework/render.js';
@@ -17,7 +19,7 @@ const tripEventsElement = document.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.trip-main__trip-controls');
 
 
-const pointModel = new PointModel();
+const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
 const mainPresenter = new MainPresenter(  tripEventsElement, pointModel, allDestinationData,
