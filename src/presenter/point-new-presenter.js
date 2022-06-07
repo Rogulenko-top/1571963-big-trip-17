@@ -1,8 +1,7 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import NewEventFormView from '../view/new-event-form-view.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, BLANK_POINT } from '../const.js';
 import { nanoid } from 'nanoid';
-import { BLANK_POINT } from '../const.js';
 
 
 export default class PointNewPresenter {
@@ -11,19 +10,23 @@ export default class PointNewPresenter {
   #pointEditComponent = null;
   #destroyCallback = null;
 
-  #destination = null;
-  #offers = null;
+  #destinationModel = null;
+  #offersModel = null;
 
-  constructor(pointListContainer, destination, changeData, offers) {
+  #destination = [];
+  #offers = [];
+
+  constructor(pointListContainer, changeData, pointData) {
     this.#pointListContainer = pointListContainer;
-    this.#destination = destination;
-    this.#offers = offers;
+    this.#destinationModel = pointData;
+    this.#offersModel = pointData;
     this.#changeData = changeData;
   }
 
   init = (callback) => {
     this.#destroyCallback = callback;
-
+    this.#destination = this.#destinationModel.destinations;
+    this.#offers = this.#offersModel.offers;
     if (this.#pointEditComponent !== null) {
       return;
     }

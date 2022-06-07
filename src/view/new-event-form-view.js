@@ -8,7 +8,6 @@ import he from 'he';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
   const checked = type === checkedType ? 'checked' : '';
-
   return `<div class='event__type-item'>
     <input id='event-type-${type}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value=${type} ${checked}>
     <label class='event__type-label  event__type-label--${type}' for='event-type-${type}-1'>${type.charAt(0).toUpperCase() + type.slice(1)}</label>
@@ -36,7 +35,7 @@ const renderDestinations = (allDestinations) => allDestinations.map((destination
 const createDestinationsTemplate = (type, destination, allDestinations) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
     <datalist id="destination-list-1">
       ${renderDestinations(allDestinations)}
     </datalist>
@@ -44,13 +43,13 @@ const createDestinationsTemplate = (type, destination, allDestinations) => (
 );
 
 const renderPhotos = (allDestinations, checkedDestination) => {
-  const pointDestination = allDestinations.find((destination) => destination.name === checkedDestination);
+  const pointDestination = allDestinations.find((destination) => destination.name === checkedDestination.name);
 
   return pointDestination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 };
 
 const createDestinationPhotoTemplate = (allDestinations, checkedDestination) => {
-  const pointDestination = allDestinations.find((destination) => destination.name === checkedDestination);
+  const pointDestination = allDestinations.find((destination) => destination.name === checkedDestination.name);
 
   return pointDestination && pointDestination.description !== '' ?
     `<section class="event__section  event__section--destination">
@@ -67,30 +66,35 @@ const createDestinationPhotoTemplate = (allDestinations, checkedDestination) => 
 const renderAvailableOffers = (checkedType, allOffers, checkedOffers) => {
   const pointTypeOffer = allOffers.find((offer) => offer.type === checkedType);
 
-  return pointTypeOffer.offers.map((offer) => {
-    const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
+  if (pointTypeOffer !== undefined) {
+    return pointTypeOffer.offers.map((offer) => {
+      const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
 
-    return `<div class='event__offer-selector'>
-      <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked}>
-      <label class='event__offer-label' for='event-offer-luggage-${offer.id}'>
-        <span class='event__offer-title'>${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class='event__offer-price'>${offer.price}</span>
-      </label>
-    </div>`;
-  }).join('');
+      return `<div class='event__offer-selector'>
+        <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked}>
+        <label class='event__offer-label' for='event-offer-luggage-${offer.id}'>
+          <span class='event__offer-title'>${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class='event__offer-price'>${offer.price}</span>
+        </label>
+      </div>`;
+    }).join('');
+  }
+  return '';
 };
 
 const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) => {
   const pointTypeOffer = allOffers.find((offer) => offer.type === checkedType);
-
-  return pointTypeOffer.offers.length ?
-    `<section class='event__section  event__section--offers'>
-      <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
-      <div class='event__available-offers'>
-        ${renderAvailableOffers(checkedType, allOffers, checkedOffers)}
-      </div>
-    </section>` : '';
+  if (pointTypeOffer !== undefined) {
+    return pointTypeOffer.offers.length ?
+      `<section class='event__section  event__section--offers'>
+        <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
+        <div class='event__available-offers'>
+          ${renderAvailableOffers(checkedType, allOffers, checkedOffers)}
+        </div>
+      </section>` : '';
+  }
+  return '';
 };
 
 const createNewEventFormTemplate = (point, destinationData, offersData) => {
@@ -262,9 +266,8 @@ export default class NewEventFormView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      checkedDestination: evt.target.value,
-    });
+    this._state.checkedDestination.name = evt.target.value;
+    this.updateElement({ checkedDestination: this._state.checkedDestination });
   };
 
   #basePriceHandler = (evt) => {

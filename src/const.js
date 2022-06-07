@@ -1,15 +1,7 @@
-
 const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-const OFFERS_TITLE = ['Upgrade to a business class', 'Add luggage', 'Switch to comfort class', 'Add meal', 'Choose seats', 'Travel by train', 'Choose the radio station'];
-
-const CITIES_LIBRARY = ['Tokyo','Wellington', 'Canberra', 'Toronto', 'Oslo'];
-
-const BASE_PRICE = [20, 50, 160, 180, 600];
-
-const DESTINATIONS = ['Amsterdam', 'Chamonix', 'Geneva'];
-
-const NUM_OF_POINTS = 5;
+const AUTHORIZATION = 'Basic AS277S44w9l1sl2j';
+const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/';
 
 const MODE = {
   DEFAULT: 'DEFAULT',
@@ -32,9 +24,14 @@ const BLANK_POINT = {
   basePrice: '',
   dateFrom: null,
   dateTo: null,
-  destination: 'Amsterdam',
-  type: 'taxi',
+  destination: {
+    description: ' ',
+    name: 'Oslo',
+    pictures: [],
+  },
+  isFavorite: false,
   offers: [],
+  type: 'taxi',
 };
 
 const UserAction = {
@@ -47,6 +44,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
-export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, OFFERS_TITLE, CITIES_LIBRARY, BASE_PRICE, DESTINATIONS, NUM_OF_POINTS, UserAction, UpdateType };
+export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, UserAction, UpdateType, AUTHORIZATION, END_POINT };

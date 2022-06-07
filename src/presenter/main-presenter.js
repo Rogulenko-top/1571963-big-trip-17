@@ -1,10 +1,10 @@
 import TripSortView from '../view/trip-sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import TripListEmptyView from '../view/trip-list-empty-view.js';
+import LoadingView from '../view/trip-loading-view.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
 
-// import FilterModel from '../model/filter-model.js';
 import { SORT_TYPE, UpdateType, UserAction, FILTER_TYPE } from '../const.js';
 
 import { remove, render, RenderPosition } from '../framework/render.js';
@@ -15,29 +15,27 @@ export default class MainPresenter {
 
   #eventListView = new EventListView(); // создаем экземпляр пустого списка точек маршрута
   #tripListEmptyView = null; //Создаем экземпляр вьюшки вывода сообщения при отсутствии точек маршрута
-
+  #loadingComponent = new LoadingView();
   #sortComponent = null; //создаем экземпляр вьюшки сортировки
 
   #filterModel = null;
 
   #tripEventsDOM = null;
   #pointData = null;
-  #destionationData = null;
-  #typesOfferData = null;
+
 
   #savePointView = new Map();
   #pointNewPresenter = null;
   #currentSortType = SORT_TYPE.DEFAULT;
   #filterType = FILTER_TYPE.EVERYTHING;
+  #isLoading = true;
 
-  constructor(tripEventsDOM, pointData, destionationData, typesOfferData, filterModel){
+  constructor(tripEventsDOM, pointData, filterModel){
     this.#tripEventsDOM = tripEventsDOM;
     this.#pointData = pointData;
-    this.#destionationData = destionationData;
-    this.#typesOfferData = typesOfferData;
     this.#filterModel = filterModel;
 
-    this.#pointNewPresenter = new PointNewPresenter(this.#eventListView.element, this.#destionationData, this.#handleViewAction, this.#typesOfferData);
+    this.#pointNewPresenter = new PointNewPresenter(this.#eventListView.element, this.#handleViewAction, this.#pointData);
 
     this.#pointData.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -45,9 +43,7 @@ export default class MainPresenter {
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-
     const tasks = this.#pointData.points;
-
     const filteredPoints = filter[this.#filterType](tasks);
 
     switch (this.#currentSortType) {
@@ -156,23 +152,40 @@ export default class MainPresenter {
         this.#renderСonditionPointsView();
         // - обновить всю доску (например, при переключении фильтра)
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderСonditionPointsView();
+        break;
     }
   };
+
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#tripEventsDOM, RenderPosition.AFTERBEGIN);
+  };
+
 
   #renderAmountPointsView = (points) => {
     points.forEach((point) => this.#renderCreatePointView(point));
   };
 
   #renderCreatePointView = (point) => {
-    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#destionationData, this.#handleViewAction, this.#handleModeChange, this.#typesOfferData);
+    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#handleViewAction, this.#handleModeChange, this.#pointData);
 
     pointPresenter.init(point);
     this.#savePointView.set(point.id, pointPresenter);
   };
 
   #renderСonditionPointsView = () => {
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
     const pointCount = points.length;
+
     if(pointCount === 0){
       this.#renderListEmptyView();
       return;
