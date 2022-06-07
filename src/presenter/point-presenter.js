@@ -17,12 +17,11 @@ export default class PointPresenter {
   #changeMode = null;
   #destionationData = null;
   #typesOfferData = null;
-  #pointData = null;
 
   #point = null;
   #mode = MODE.DEFAULT;
 
-  constructor(eventListContainer, destionationData, changeData, changeMode, typesOfferData, pointData) {
+  constructor(eventListContainer, changeData, changeMode, pointData) {
     this.#eventListContainer = eventListContainer;
 
     this.#typesOfferData = pointData.offers;

@@ -22,8 +22,7 @@ export default class MainPresenter {
 
   #tripEventsDOM = null;
   #pointData = null;
-  #destionationData = null;
-  #typesOfferData = null;
+
 
   #savePointView = new Map();
   #pointNewPresenter = null;
@@ -31,11 +30,9 @@ export default class MainPresenter {
   #filterType = FILTER_TYPE.EVERYTHING;
   #isLoading = true;
 
-  constructor(tripEventsDOM, pointData, destionationData, typesOfferData, filterModel){
+  constructor(tripEventsDOM, pointData, filterModel){
     this.#tripEventsDOM = tripEventsDOM;
     this.#pointData = pointData;
-    this.#destionationData = destionationData;
-    this.#typesOfferData = typesOfferData;
     this.#filterModel = filterModel;
 
     this.#pointNewPresenter = new PointNewPresenter(this.#eventListView.element, this.#handleViewAction, this.#pointData);
@@ -173,7 +170,7 @@ export default class MainPresenter {
   };
 
   #renderCreatePointView = (point) => {
-    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#destionationData, this.#handleViewAction, this.#handleModeChange, this.#typesOfferData, this.#pointData);
+    const pointPresenter = new PointPresenter(this.#eventListView.element, this.#handleViewAction, this.#handleModeChange, this.#pointData);
 
     pointPresenter.init(point);
     this.#savePointView.set(point.id, pointPresenter);

@@ -8,7 +8,6 @@ import he from 'he';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
   const checked = type === checkedType ? 'checked' : '';
-
   return `<div class='event__type-item'>
     <input id='event-type-${type}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value=${type} ${checked}>
     <label class='event__type-label  event__type-label--${type}' for='event-type-${type}-1'>${type.charAt(0).toUpperCase() + type.slice(1)}</label>
@@ -100,7 +99,6 @@ const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) =>
 
 const createNewEventFormTemplate = (point, destinationData, offersData) => {
   const { price, dateFrom, dateTo, checkedDestination, checkedType, checkedOffers } = point;
-  // console.log(offersData);
 
   const pointTypesTemplate = createPointTypesTemplate(checkedType);
   const destinationaTempalte = createDestinationsTemplate(checkedType, checkedDestination, destinationData);
