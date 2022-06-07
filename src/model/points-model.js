@@ -5,8 +5,11 @@ import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
   #points = [];
+  #offers = [];
+  #destinations = [];
 
   #pointsApiService = null;
+
 
   constructor(pointsApiService) {
     super();
@@ -17,16 +20,29 @@ export default class PointsModel extends Observable {
     return this.#points;
   }
 
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
   init = async () => {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+      this.#offers = await this.#pointsApiService.offers;
+      this.#destinations = await this.#pointsApiService.destinations;
     } catch (err) {
       this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
     }
 
     this._notify(UpdateType.INIT);
   };
+
 
   updatePoint = (updateType, update) => {
     const index = this.#points.findIndex((point) => point.id === update.id);

@@ -32,9 +32,14 @@ const BLANK_POINT = {
   basePrice: '',
   dateFrom: null,
   dateTo: null,
-  destination: 'Amsterdam',
-  type: 'taxi',
+  destination: {
+    description: ' ',
+    name: ' Saratov',
+    pictures: [],
+  },
+  isFavorite: false,
   offers: [],
+  type: 'taxi',
 };
 
 const UserAction = {

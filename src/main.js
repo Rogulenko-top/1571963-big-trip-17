@@ -39,11 +39,12 @@ const handleNewPointButtonClick = () => {
   newPointButtonComponent.element.disabled = true;
 };
 
-render(newPointButtonComponent, siteHeaderElement, RenderPosition.AFTEREND);
-newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
-
 
 filterPresenter.init();
 mainPresenter.init();
-pointModel.init();
+pointModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, siteHeaderElement, RenderPosition.AFTEREND);
+    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+  });
 
