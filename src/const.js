@@ -54,4 +54,10 @@ const Method = {
   DELETE: 'DELETE',
 };
 
-export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, UserAction, UpdateType, AUTHORIZATION, END_POINT, Method };
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+
+export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, UserAction, UpdateType, AUTHORIZATION, END_POINT, Method, TimeLimit };
