@@ -17,9 +17,8 @@ const siteHeaderElement = document.querySelector('.trip-main__trip-controls'); /
 const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
-const mainPresenter = new MainPresenter(  tripEventsElement, pointModel, filterModel);
+const mainPresenter = new MainPresenter(tripEventsElement, pointModel, filterModel);
 const filterPresenter = new FilterPresenter(tripFiltersElement, pointModel, filterModel);
-
 
 const newPointButtonComponent = new NewPointButtonView(); //кнопка
 

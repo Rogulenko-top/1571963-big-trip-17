@@ -1,7 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import NewEventFormView from '../view/new-event-form-view.js';
 import { UserAction, UpdateType, BLANK_POINT } from '../const.js';
-import { nanoid } from 'nanoid';
 
 
 export default class PointNewPresenter {
@@ -65,9 +64,8 @@ export default class PointNewPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      { id: nanoid(), ...point },
+      point,
     );
-    this.destroy();
   };
 
   #handleFormClick = () => {
