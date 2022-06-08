@@ -47,4 +47,17 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, UserAction, UpdateType, AUTHORIZATION, END_POINT };
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+
+export { MODE, SORT_TYPE, FILTER_TYPE, BLANK_POINT, TYPES_LIBRARY, UserAction, UpdateType, AUTHORIZATION, END_POINT, Method, TimeLimit };

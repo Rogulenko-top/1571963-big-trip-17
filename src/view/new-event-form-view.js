@@ -14,13 +14,13 @@ const renderPointTypes = (types, checkedType) => Object.values(types).map((type)
   </div>`;
 }).join('');
 
-const createPointTypesTemplate = (checkedType) => (
+const createPointTypesTemplate = (checkedType, isDisabled) => (
   `<div class='event__type-wrapper'>
     <label class='event__type  event__type-btn' for='event-type-toggle-1'>
       <span class='visually-hidden'>Choose event type</span>
       <img class='event__type-icon' width='17' height='17' src='img/icons/${checkedType}.png' alt='Event type icon'>
     </label>
-    <input class='event__type-toggle  visually-hidden' id='event-type-toggle-1' type='checkbox'>
+    <input class='event__type-toggle  visually-hidden' id='event-type-toggle-1' type='checkbox' ${isDisabled ? 'disabled' : ''}>
     <div class='event__type-list'>
       <fieldset class='event__type-group'>
         <legend class='visually-hidden'>Event type</legend>
@@ -32,10 +32,10 @@ const createPointTypesTemplate = (checkedType) => (
 
 const renderDestinations = (allDestinations) => allDestinations.map((destination) => `<option value=${destination.name}></option>`).join('');
 
-const createDestinationsTemplate = (type, destination, allDestinations) => (
+const createDestinationsTemplate = (type, destination, allDestinations, isDisabled) => (
   `<div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
     <datalist id="destination-list-1">
       ${renderDestinations(allDestinations)}
     </datalist>
@@ -63,7 +63,7 @@ const createDestinationPhotoTemplate = (allDestinations, checkedDestination) => 
     </section>` : '';
 };
 
-const renderAvailableOffers = (checkedType, allOffers, checkedOffers) => {
+const renderAvailableOffers = (checkedType, allOffers, checkedOffers, isDisabled) => {
   const pointTypeOffer = allOffers.find((offer) => offer.type === checkedType);
 
   if (pointTypeOffer !== undefined) {
@@ -71,7 +71,7 @@ const renderAvailableOffers = (checkedType, allOffers, checkedOffers) => {
       const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
 
       return `<div class='event__offer-selector'>
-        <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked}>
+        <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked} ${isDisabled ? 'disabled' : ''}>
         <label class='event__offer-label' for='event-offer-luggage-${offer.id}'>
           <span class='event__offer-title'>${offer.title}</span>
           &plus;&euro;&nbsp;
@@ -83,14 +83,14 @@ const renderAvailableOffers = (checkedType, allOffers, checkedOffers) => {
   return '';
 };
 
-const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) => {
+const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers, isDisabled) => {
   const pointTypeOffer = allOffers.find((offer) => offer.type === checkedType);
   if (pointTypeOffer !== undefined) {
     return pointTypeOffer.offers.length ?
       `<section class='event__section  event__section--offers'>
         <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
         <div class='event__available-offers'>
-          ${renderAvailableOffers(checkedType, allOffers, checkedOffers)}
+          ${renderAvailableOffers(checkedType, allOffers, checkedOffers, isDisabled)}
         </div>
       </section>` : '';
   }
@@ -98,12 +98,12 @@ const createAvailableOffersTemplate = (checkedType, allOffers, checkedOffers) =>
 };
 
 const createNewEventFormTemplate = (point, destinationData, offersData) => {
-  const { price, dateFrom, dateTo, checkedDestination, checkedType, checkedOffers } = point;
+  const { price, dateFrom, dateTo, checkedDestination, checkedType, checkedOffers, isDisabled, isSaving, isDeleting  } = point;
 
-  const pointTypesTemplate = createPointTypesTemplate(checkedType);
-  const destinationaTempalte = createDestinationsTemplate(checkedType, checkedDestination, destinationData);
+  const pointTypesTemplate = createPointTypesTemplate(checkedType, isDisabled);
+  const destinationaTempalte = createDestinationsTemplate(checkedType, checkedDestination, destinationData, isDisabled);
   const destinationPhotoTemplate = createDestinationPhotoTemplate(destinationData, checkedDestination);
-  const offersTemplate = createAvailableOffersTemplate(checkedType, offersData, checkedOffers);
+  const offersTemplate = createAvailableOffersTemplate(checkedType, offersData, checkedOffers, isDisabled);
 
   const newDateFrom = dateFrom !== null ? humanizePointDateAndTime(dateFrom) : '';
   const newDateTo = dateTo !== null ? humanizePointDateAndTime(dateTo) : '';
@@ -118,21 +118,25 @@ const createNewEventFormTemplate = (point, destinationData, offersData) => {
           ${destinationaTempalte}
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${newDateFrom}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${newDateFrom}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${newDateTo}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${newDateTo}" ${isDisabled ? 'disabled' : ''}>
           </div>
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price-1">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}" ${isDisabled ? 'disabled' : ''}>
           </div>
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>
+            ${isSaving ? 'Saving...' : 'Save'}
+          </button>
+          <button class="event__reset-btn" type="reset" ${isDeleting ? 'disabled' : ''}>
+            ${isDeleting ? 'Deleting...' : 'Delete'}
+          </button>
+          <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
@@ -195,6 +199,9 @@ export default class NewEventFormView extends AbstractStatefulView {
     checkedDestination: point.destination,
     price: point.basePrice,
     checkedOffers: point.offers,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
   });
 
   static parseStateToPoint = (state) => {
@@ -213,6 +220,9 @@ export default class NewEventFormView extends AbstractStatefulView {
     delete point.checkedDestination;
     delete point.price;
     delete point.checkedOffers;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   };
