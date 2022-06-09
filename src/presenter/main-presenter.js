@@ -60,7 +60,7 @@ export default class MainPresenter {
   }
 
   init = () => {
-    this.#renderСonditionPointsView();
+    this.#renderConditionPointsView();
   };
 
   createPoint = (callback) => {
@@ -83,7 +83,7 @@ export default class MainPresenter {
 
     this.#currentSortType = sortType;
     this.#clearPointsList();
-    this.#renderСonditionPointsView();
+    this.#renderConditionPointsView();
   };
 
   #renderSortView = () => {
@@ -156,16 +156,16 @@ export default class MainPresenter {
         break;
       case UpdateType.MINOR:
         this.#clearPointsList();
-        this.#renderСonditionPointsView();
+        this.#renderConditionPointsView();
         break;
       case UpdateType.MAJOR:
         this.#clearPointsList({ resetSortType: true });
-        this.#renderСonditionPointsView();
+        this.#renderConditionPointsView();
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#renderСonditionPointsView();
+        this.#renderConditionPointsView();
         break;
     }
   };
@@ -186,7 +186,7 @@ export default class MainPresenter {
     this.#savePointView.set(point.id, pointPresenter);
   };
 
-  #renderСonditionPointsView = () => {
+  #renderConditionPointsView = () => {
 
     if (this.#isLoading) {
       this.#renderLoading();

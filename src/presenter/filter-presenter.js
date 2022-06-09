@@ -47,7 +47,7 @@ export default class FilterPresenter {
     const prevFilterComponent = this.#tripFiltersView;
 
     this.#tripFiltersView = new TripFiltersView(filters, this.#filterModel.filter);
-    this.#tripFiltersView.setFilterTypeChengeHandler(this.#handleFilterTypeChange);
+    this.#tripFiltersView.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
       render(this.#tripFiltersView, this.#filterContainer);
